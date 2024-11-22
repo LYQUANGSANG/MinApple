@@ -54,11 +54,12 @@ onMounted(() => {
 });
 
 const getDataCategory = () => {
-    axios.get('http://127.0.0.1:8000/api/categories')
+    axios.get('localhost:8080/api/categories/all')
         .then((response: any) => {
-            menus.value = response.data;
-            menuSelect.value = menus.value[0];
-            subMenuSelect.value = menuSelect.value.sub_categories[0];
+            // menus.value = response.data;
+            // menuSelect.value = menus.value[0];
+            // subMenuSelect.value = menuSelect.value.sub_categories[0];
+
         })
         .catch((error: any) => {
             console.error(error);
@@ -172,14 +173,15 @@ const handleFileUploadColor = (event: any, color: any) => {
                         </div>
                         <h5 class="mb-3">Hình ảnh về sản phẩm</h5>
                         <div class="input-group mb-3 input_from1">
-                            <input type="file" class="form-control" id="inputGroupFile01" @change="handleFileUploadProduct">
+                            <input type="file" class="form-control" id="inputGroupFile01"
+                                @change="handleFileUploadProduct">
                         </div>
                         <h5 class="mb-3">Loại sản phẩm</h5>
                         <div class="info-1 mb-3">
                             <div style="width: 200px; max-width: 200px;">
                                 <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button"
+                                        id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                         {{ menuSelect ? menuSelect.name : '' }}
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -190,8 +192,8 @@ const handleFileUploadColor = (event: any, color: any) => {
                             </div>
                             <div v-if="menuSelect" style="width: 200px; max-width: 200px;">
                                 <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button"
+                                        id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
                                         {{ subMenuSelect ? subMenuSelect.name : '' }}
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
@@ -227,7 +229,8 @@ const handleFileUploadColor = (event: any, color: any) => {
                             <div style="margin-left: 10px;"><img style="padding-top: 35px;"
                                     src="../assets/icon/ic_trash.svg" alt="Delete"></div>
                         </div>
-                        <button @click="addColor()" style="width: 200px;" type="button" class="btn btn-primary mt-3">Thêm
+                        <button @click="addColor()" style="width: 200px;" type="button"
+                            class="btn btn-primary mt-3">Thêm
                             màu</button>
                         <div class="pay">
                             <button @click="addNewProduct()" data-bs-toggle="modal" data-bs-target="#quickOrder">
@@ -267,8 +270,8 @@ const handleFileUploadColor = (event: any, color: any) => {
                         </div>
                         <h5 class="mb-3">Camera</h5>
                         <div class="input-group mb-3 input_from1">
-                            <input type="text" class="form-control" placeholder="Camera" aria-describedby="button-addon2"
-                                v-model="productDetail.camera">
+                            <input type="text" class="form-control" placeholder="Camera"
+                                aria-describedby="button-addon2" v-model="productDetail.camera">
                         </div>
                     </div>
                 </div>

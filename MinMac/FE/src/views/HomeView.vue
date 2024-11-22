@@ -12,11 +12,10 @@ onMounted(() => {
   getDataCategory();
 });
 
-const getDataCategory = () => {
+const getDataCategory = (): any => {
   axios.get('http://localhost:8080/api/categories/all')
     .then((response: any) => {
-      console.log(response);
-      
+      return response.data;
     })
     .catch((error: any) => {
       console.error(error);
