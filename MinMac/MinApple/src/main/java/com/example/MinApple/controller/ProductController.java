@@ -17,7 +17,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
     }
@@ -29,7 +29,7 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<?> createProduct(@Valid @RequestBody Product product, BindingResult result) {
         if (result.hasErrors()) {
             List<String> errors = result.getFieldErrors().stream()
@@ -60,5 +60,14 @@ public class ProductController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+        @GetMapping("/search")
+    public ResponseEntity<List<Product>> searchProducts(@RequestParam("name") String name) {
+        List<Product> products = productService.searchProductsByName(name);
+        if (products.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Trả về 204 nếu không tìm thấy
+        }
+        return ResponseEntity.ok(products);
     }
 }

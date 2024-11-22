@@ -16,7 +16,7 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Cart> getAllCarts() {
         return cartService.getAllCarts();
     }
@@ -28,7 +28,7 @@ public class CartController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public Cart createCart(@RequestBody Cart cart) {
         return cartService.createCart(cart);
     }

@@ -20,7 +20,7 @@ public class ProductDetailController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public ProductDetail createProductDetail(@Valid @RequestBody ProductDetail productDetail) {
         return productDetailService.createProductDetail(productDetail);
     }

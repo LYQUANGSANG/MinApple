@@ -16,7 +16,7 @@ public class SubCategoryController {
     @Autowired
     private SubCategoryService subCategoryService;
 
-    @GetMapping
+    @GetMapping("/all")
     public List<SubCategory> getAllSubCategories() {
         return subCategoryService.getAllSubCategories();
     }
@@ -28,7 +28,7 @@ public class SubCategoryController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public SubCategory createSubCategory(@RequestBody SubCategory subCategory) {
         return subCategoryService.createSubCategory(subCategory);
     }

@@ -16,7 +16,7 @@ public class ColorProductController {
     @Autowired
     private ColorProductService colorProductService;
 
-    @GetMapping
+    @GetMapping("/all")
     public List<ColorProduct> getAllColorProducts() {
         return colorProductService.getAllColorProducts();
     }
@@ -28,7 +28,7 @@ public class ColorProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public ColorProduct createColorProduct(@RequestBody ColorProduct colorProduct) {
         return colorProductService.createColorProduct(colorProduct);
     }
