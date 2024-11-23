@@ -5,9 +5,11 @@ import org.springframework.ui.Model;
 import com.example.MinApple.service.VNPAYService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping("/api/vnpay")
 public class VNPAYController {
     @Autowired
     private VNPAYService vnPayService;
@@ -19,12 +21,10 @@ public class VNPAYController {
 
     // Chuyển hướng người dùng đến cổng thanh toán VNPAY
     @PostMapping("/submitOrder")
-    public String submidOrder(@RequestParam("amount") int orderTotal,
-                              @RequestParam("orderInfo") String orderInfo,
-                              HttpServletRequest request) {
+    public ResponseEntity submidOrder(HttpServletRequest request, @RequestBody VnPayInput input) {
         String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-        String vnpayUrl = vnPayService.createOrder(request, orderTotal, orderInfo, baseUrl);
-        return "redirect:" + vnpayUrl;
+        String vnpayUrl = vnPayService.createOrder(request, input.getAmount(), input.getOrderInfor(), baseUrl);
+        return ResponseEntity.ok(vnpayUrl);
     }
 
     // Sau khi hoàn tất thanh toán, VNPAY sẽ chuyển hướng trình duyệt về URL này

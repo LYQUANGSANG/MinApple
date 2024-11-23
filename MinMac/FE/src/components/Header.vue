@@ -3,7 +3,6 @@ import router from '@/router';
 import { onMounted, ref } from 'vue';
 import { categorysData } from '../data';
 import axios from 'axios';
-import { off } from 'process';
 
 const singUP = (() => {
     router.push('/signup');
@@ -23,6 +22,7 @@ const search: any = ref('');
 
 onMounted(() => {
     menus.value = categorysData;
+    getCategory();
 });
 
 const login = () => {
@@ -35,6 +35,16 @@ const login = () => {
             alert('Đăng nhập không thành công');
             islogin.value = false;
         });
+}
+
+const getCategory = () => {
+    axios.get('localhost:8000/api/categories/all')
+        .then((response: any) => {
+            console.log(response.data);
+        })
+        .catch((error: any) => {
+            console.log(error)
+        })
 }
 
 const setPath = (name: string) => {
@@ -89,7 +99,8 @@ const searchProduct = () => {
                             <img src="../assets/icon/ic_user.svg">
                         </div>
                         <ul class="dropdown-menu">
-                            <li><button v-if="islogin" class="dropdown-item" type="button">Thông tin cá nhân</button></li>
+                            <li><button v-if="islogin" class="dropdown-item" type="button">Thông tin cá nhân</button>
+                            </li>
                             <li><button @click="openOrder()" v-if="islogin" class="dropdown-item" type="button">Đơn
                                     mua</button></li>
                             <li><button v-if="!islogin" class="dropdown-item" type="button" data-bs-toggle="modal"
@@ -124,7 +135,8 @@ const searchProduct = () => {
                                 </p>
                             </div>
                             <span>New to MinApp? </span>
-                            <span data-bs-dismiss="modal" style="cursor: pointer;" class="text-primary" @click="singUP">Sign
+                            <span data-bs-dismiss="modal" style="cursor: pointer;" class="text-primary"
+                                @click="singUP">Sign
                                 up</span>
                         </div>
                     </div>

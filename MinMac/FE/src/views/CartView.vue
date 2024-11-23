@@ -3,6 +3,9 @@ import { computed, onMounted, ref, type Ref } from 'vue';
 import _ from 'lodash';
 import { formatPrice } from '../common/number';
 import { main } from '@popperjs/core';
+import { v4 } from "uuid";
+import axios from 'axios';
+
 
 const products: Ref<any[]> = ref([]);
 const paymentsMomo = ref(false);
@@ -13,6 +16,7 @@ const phoneNumber = ref();
 const mail = ref('');
 const address = ref('');
 const note = ref('');
+const selectedPayment = ref('cod');
 
 onMounted(() => {
     let dataInStorage: any = localStorage.getItem(userId);
@@ -31,6 +35,16 @@ const totalPrice = computed(() => {
     _.forEach(products.value, ((p: any) => result = result + (p.price * p.quantity)));
     return formatPrice(result);
 });
+
+const payMent = () => {
+    if (selectedPayment.value === 'vnpay') {
+        const command = { amount: parseInt(totalPrice.value.replace(/\./g, ''), 10), orderInfor: v4().toString() }
+        axios.post('http://localhost:8080/api/vnpay/submitOrder', command)
+            .then((redsponse: any) => {
+                window.open(redsponse.data, "_blank")
+            })
+    }
+}
 
 </script>
 
@@ -73,9 +87,9 @@ const totalPrice = computed(() => {
                                         <div class="text-truncate- fw-bold product_title">{{ product.name }}</div>
                                         <div class="mt-1 rounded-2 bg-light px-2 pt-1">
                                             <div class="form-check m-0">
-                                                <input data-update="goibaohanh" data-key="42657357bf9210cc30ac587ca0e13700"
-                                                    data-value="20491" type="checkbox"
-                                                    class="typecover form-check-input goibh"
+                                                <input data-update="goibaohanh"
+                                                    data-key="42657357bf9210cc30ac587ca0e13700" data-value="20491"
+                                                    type="checkbox" class="typecover form-check-input goibh"
                                                     name="goibh42657357bf9210cc30ac587ca0e13700"
                                                     id="goibh42657357bf9210cc30ac587ca0e13700" value="1"
                                                     aria-invalid="false">
@@ -93,8 +107,9 @@ const totalPrice = computed(() => {
                                 <div class="input-group d-flex flex-row align-items-center">
                                     <input data-update="qty" data-key="42657357bf9210cc30ac587ca0e13700" type="number"
                                         id="qty_42657357bf9210cc30ac587ca0e13700"
-                                        name="qty[42657357bf9210cc30ac587ca0e13700]" min="1" max="100" aria-valuemax="100"
-                                        aria-valuemin="1" class="quantity_number form-control border-0 bg-light shadow-none"
+                                        name="qty[42657357bf9210cc30ac587ca0e13700]" min="1" max="100"
+                                        aria-valuemax="100" aria-valuemin="1"
+                                        class="quantity_number form-control border-0 bg-light shadow-none"
                                         :value="product.quantity" aria-invalid="false">
                                 </div>
                             </td>
@@ -114,7 +129,7 @@ const totalPrice = computed(() => {
                             <td class="text-end">
                                 <div class="priceFormat total_price fw-bold">{{ formatPrice(product.price *
                                     product.quantity)
-                                }} đ</div>
+                                    }} đ</div>
                             </td>
                             <td class="text-center">
                                 <img @click="remoteProduct(product)" src="../assets/icon/ic_trash.svg" alt="Delete">
@@ -124,7 +139,8 @@ const totalPrice = computed(() => {
                     <tfoot>
                         <tr>
                             <td colspan="4">
-                                <div class="d-flex align-items-center fw-bold"><span>Tổng đơn hàng (tạm tính)</span></div>
+                                <div class="d-flex align-items-center fw-bold"><span>Tổng đơn hàng (tạm tính)</span>
+                                </div>
                             </td>
                             <td colspan="2" class="text-end"><strong id="order_total"
                                     class="priceFormat fs-5 text-mo-green fw-bold">{{ totalPrice }}
@@ -222,14 +238,14 @@ const totalPrice = computed(() => {
                                         <p class="fw-bold">Hình thức thanh toán:</p>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                                id="payments1" :checked="true">
+                                                id="payments1" value="cod" v-model="selectedPayment" />
                                             <label class="form-check-label" for="payments1">
                                                 Thanh toán khi nhận hàng.
                                             </label>
                                         </div>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                                id="payments2">
+                                                id="payments2" value="vnpay" v-model="selectedPayment" />
                                             <label class="form-check-label" for="payments2">
                                                 Thanh toán qua VnPay.
                                             </label>
@@ -242,7 +258,8 @@ const totalPrice = computed(() => {
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Xác nhận</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="payMent">Xác
+                                nhận</button>
                         </div>
                     </div>
                 </div>

@@ -16,6 +16,7 @@ const phoneNumber = ref();
 const mail = ref('');
 const address = ref('');
 const note = ref('');
+const selectedPayment = ref('cod');
 
 let model: any = ref({
     id: 0,
@@ -88,6 +89,16 @@ const getAddData = () => {
     // getDataProduct();
     relatedProducts.value = _.filter(macbookproData, ((f: any) => { return f.id != productId.value }));
     relatedProducts.value = _.chunk(relatedProducts.value, 2)[0];
+}
+
+const payMent = () => {
+    if (selectedPayment.value === 'vnpay') {
+        const command = { amount: totalPrice.value, orderInfor: v4().toString() }
+        axios.post('http://localhost:8080/api/vnpay/submitOrder', command)
+            .then((redsponse: any) => {
+                window.open(redsponse.data, "_blank")
+            })
+    }
 }
 
 watch(productId, () => {
@@ -248,7 +259,8 @@ const openMesseger = () => {
                         </div>
                         <div class="action">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked">
                             </div>
                         </div>
                     </div>
@@ -341,7 +353,8 @@ const openMesseger = () => {
                 <RouterLink to="/">MacBook Pro 2023</RouterLink>
             </div>
 
-            <div class="modal fade" id="quickOrder" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="quickOrder" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -353,8 +366,8 @@ const openMesseger = () => {
                                 <div class="col-12">
                                     <p><span class="wpcf7-form-control-wrap" data-name="hoten"><input size="40"
                                                 class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required form-control form-control-lg"
-                                                id="hoten" aria-required="true" aria-invalid="false" placeholder="Họ và tên"
-                                                type="text" name="hoten" v-model="name"></span>
+                                                id="hoten" aria-required="true" aria-invalid="false"
+                                                placeholder="Họ và tên" type="text" name="hoten" v-model="name"></span>
                                     </p>
                                 </div>
                                 <div class="col-12">
@@ -375,12 +388,14 @@ const openMesseger = () => {
                                 <div class="col-12">
                                     <p><span class="wpcf7-form-control-wrap" data-name="diachi"><input size="40"
                                                 class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required form-control form-control-lg"
-                                                id="diachi" aria-required="true" aria-invalid="false" placeholder="Địa chỉ"
-                                                v-model="address" type="text" name="diachi"></span>
+                                                id="diachi" aria-required="true" aria-invalid="false"
+                                                placeholder="Địa chỉ" v-model="address" type="text"
+                                                name="diachi"></span>
                                     </p>
                                 </div>
                                 <div class="col-12">
-                                    <p><span class="wpcf7-form-control-wrap" data-name="ghichu"><textarea cols="40" rows="2"
+                                    <p><span class="wpcf7-form-control-wrap" data-name="ghichu"><textarea cols="40"
+                                                rows="2"
                                                 class="wpcf7-form-control wpcf7-textarea form-control form-control-lg"
                                                 id="ghichu" aria-invalid="false" placeholder="Ghi chú" name="ghichu"
                                                 v-model="note" style="display: inline-block;"></textarea></span>
@@ -439,14 +454,15 @@ const openMesseger = () => {
                                 <div class="fs-6">
                                     <p class="fw-bold">Hình thức thanh toán:</p>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="payments1"
-                                            :checked="true">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                            id="payments1" value="cod" v-model="selectedPayment" />
                                         <label class="form-check-label" for="payments1">
                                             Thanh toán khi nhận hàng.
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="payments2">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                            id="payments2" value="vnpay" v-model="selectedPayment" />
                                         <label class="form-check-label" for="payments2">
                                             Thanh toán qua VnPay.
                                         </label>
@@ -459,7 +475,8 @@ const openMesseger = () => {
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Xác nhận</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="payMent">Xác
+                            nhận</button>
                     </div>
                 </div>
             </div>
